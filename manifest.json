@@ -1,0 +1,11 @@
+{
+	"id": "goto-date",
+	"name": "Go To Date",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Quickly switch to a daily note.",
+	"author": "Thomas Schoffelen",
+	"authorUrl": "https://schof.co",
+	"fundingUrl": "https://github.com/sponsors/tschoffelen",
+	"isDesktopOnly": false
+}
