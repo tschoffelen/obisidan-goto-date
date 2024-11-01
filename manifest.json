@@ -1,7 +1,7 @@
 {
 	"id": "goto-date",
 	"name": "Go to date",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"minAppVersion": "0.15.0",
 	"description": "Quickly switch to a daily note.",
 	"author": "Thomas Schoffelen",
