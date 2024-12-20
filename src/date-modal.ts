@@ -2,11 +2,7 @@ import { FuzzyMatch, FuzzySuggestModal } from "obsidian";
 import { startOfDay, addDays, format, startOfWeek, Day } from "date-fns";
 import { Settings } from "./settings";
 import GotoDatePlugin from "./main";
-
-interface DateOption {
-	title: string;
-	date: Date;
-}
+import { DateOption } from "./types";
 
 export class DateModal extends FuzzySuggestModal<DateOption> {
 	onSubmit: (result: DateOption) => void;

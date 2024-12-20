@@ -9,6 +9,8 @@ import {
 
 import { DEFAULT_SETTINGS, Settings, SettingTab } from "./settings";
 import { showDateModal } from "./date-modal";
+import SuggestionPopup from "./at-symbol";
+import { applyHotKeyHack } from "hotkeys";
 
 export default class GotoDatePlugin extends Plugin {
 	settings: Settings;
@@ -42,14 +44,18 @@ export default class GotoDatePlugin extends Plugin {
 				this.app.workspace.getLeaf(false).openFile(note);
 			},
 		});
+
+		// Add '@' suggestion popup
+		this._suggestionPopup = new SuggestionPopup(this.app, this.settings);
+		this.registerEditorSuggest(this._suggestionPopup);
+		applyHotKeyHack(this, this.app);
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign(
-			{},
-			DEFAULT_SETTINGS,
-			await this.loadData()
-		);
+		this.settings = {
+			...DEFAULT_SETTINGS,
+			...(await this.loadData()),
+		};
 	}
 
 	async saveSettings() {
