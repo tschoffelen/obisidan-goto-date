@@ -279,7 +279,16 @@ export default class SuggestionPopup extends EditorSuggest<
 			return this.closeSuggestion();
 		}
 
-		if (!query) {
+		if (
+			!query ||
+			query.includes("\\") ||
+			query.includes("`") ||
+			query.includes("[") ||
+			query.includes("]") ||
+			query.includes("(") ||
+			query.includes(")") ||
+			query.includes("#")
+		) {
 			return this.closeSuggestion();
 		}
 
