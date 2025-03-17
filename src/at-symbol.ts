@@ -55,11 +55,14 @@ export function sharedGetSuggestions(
 				});
 			}
 
+			let alias = upperCaseFirst(query);
+			if (alias === "Today") alias = "";
+
 			options.push({
 				isCreateNewOption,
 				fileName: name,
 				filePath: path,
-				alias: upperCaseFirst(query),
+				alias,
 				value: query,
 				date: parsed,
 			});
