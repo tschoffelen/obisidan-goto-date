@@ -1,12 +1,14 @@
-import { FuzzyMatch, FuzzySuggestModal } from "obsidian";
+import { SuggestModal } from "obsidian";
 import { startOfDay, addDays, format, startOfWeek, Day } from "date-fns";
 import { Settings } from "./settings";
 import GotoDatePlugin from "./main";
 import { DateOption } from "./types";
+import * as chrono from "chrono-node";
 
-export class DateModal extends FuzzySuggestModal<DateOption> {
+export class DateModal extends SuggestModal<DateOption> {
 	onSubmit: (result: DateOption) => void;
 	settings: Settings;
+	defaultItems: DateOption[];
 
 	constructor(
 		plugin: GotoDatePlugin,
@@ -17,9 +19,11 @@ export class DateModal extends FuzzySuggestModal<DateOption> {
 		this.onSubmit = onSubmit;
 		this.setTitle("Jump to date");
 		this.setPlaceholder("Open daily note...");
+
+		this.defaultItems = this.getDefaultItems();
 	}
 
-	getItems(): DateOption[] {
+	getDefaultItems(): DateOption[] {
 		const { startOfWeek: firstDay } = this.settings;
 		const options = [
 			{
@@ -53,21 +57,49 @@ export class DateModal extends FuzzySuggestModal<DateOption> {
 		return options;
 	}
 
-	getItemText(item: DateOption): string {
-		return item.title + " " + item.date.toISOString().substring(0, 10);
+	getSuggestions(query: string): DateOption[] | Promise<DateOption[]> {
+		const parsed = chrono.en.GB.parseDate(query);
+		if (parsed) {
+			const date = startOfDay(parsed);
+			return [
+				{
+					title: format(date, "EEEE"),
+					date,
+				},
+			];
+		}
+
+		if (!query.trim().length) {
+			return this.defaultItems;
+		}
+
+		return this.defaultItems.filter((item) => {
+			return this.getItemText(item).includes(query.toLowerCase());
+		});
 	}
 
-	onChooseItem(item: DateOption, evt: MouseEvent | KeyboardEvent): void {
+	getItemText(item: DateOption): string {
+		return (
+			item.title +
+			" " +
+			item.date.toISOString().substring(0, 10)
+		).toLowerCase();
+	}
+
+	onChooseSuggestion(
+		item: DateOption,
+		evt: MouseEvent | KeyboardEvent
+	): void {
 		this.close();
 		this.onSubmit(item);
 	}
 
-	renderSuggestion(item: FuzzyMatch<DateOption>, el: HTMLElement) {
+	renderSuggestion(item: DateOption, el: HTMLElement) {
 		el.createEl("div", {
-			text: item.item.title,
+			text: item.title,
 		}).setCssStyles({ fontWeight: "600" });
 		el.createEl("small", {
-			text: item.item.date.toISOString().substring(0, 10),
+			text: item.date.toISOString().substring(0, 10),
 		});
 	}
 }
