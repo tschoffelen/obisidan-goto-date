@@ -29,6 +29,7 @@ const upperCaseFirst = (str: string) =>
 	str.charAt(0).toUpperCase() + str.slice(1);
 
 export function sharedGetSuggestions(
+	app: App,
 	files: TFile[],
 	query: string
 ): Fuzzysort.KeysResult<FileOption>[] {
@@ -209,7 +210,7 @@ export default class SuggestionPopup extends EditorSuggest<
 		context: EditorSuggestContext
 	): Fuzzysort.KeysResult<FileOption>[] {
 		const files = context.file.vault.getMarkdownFiles();
-		return sharedGetSuggestions(files, context.query);
+		return sharedGetSuggestions(this.app, files, context.query);
 	}
 
 	onTrigger(

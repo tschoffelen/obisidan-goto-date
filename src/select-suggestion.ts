@@ -37,5 +37,5 @@ export async function sharedSelectSuggestion(
 		linkText = linkText.replace(/\n/g, "");
 	}
 
-	return linkText + " ";
+	return linkText;
 }

@@ -14,6 +14,7 @@ import { applyHotKeyHack } from "hotkeys";
 
 export default class GotoDatePlugin extends Plugin {
 	settings: Settings;
+	_suggestionPopup: SuggestionPopup;
 
 	async onload() {
 		// Prepare settings
